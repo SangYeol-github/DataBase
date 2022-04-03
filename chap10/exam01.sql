@@ -1,0 +1,81 @@
+-- 실습 10-1 DEPT 테이블을 복사해서 DEPT_TEMP 테이블 만들기
+CREATE TABLE DEPT_TEMP
+    AS SELECT * FROM DEPT;
+
+-- 실습 10-2 DEPT_TEMP 테이블 전체 열 조회하기
+SELECT * FROM DEPT_TEMP;
+
+-- 1분 복습. EMP 테이블과 동일한 열 구조, 데이터를 가지는 EMP_TEMP10 테이블을 생성하기 위한 다음 코드의 빈칸을 채워 보세요
+CREATE TABLE EMP_TEMP10
+    AS SELECT * FROM EMP;
+
+-- 실습 10-3 DEPT_TEMP 테이블에 데이터 추가하기
+INSERT INTO DEPT_TEMP (DEPTNO, DNAME, LOC)
+            VALUES(50, 'DATABASE', 'SEOUL');
+SELECT * FROM DEPT_TEMP;
+
+-- 실습 10-4 INSERT문에 열 지정없이 데이터 추가하기
+INSERT INTO DEPT_TEMP
+        VALUES(60    , 'NETWORK', 'BUSAN');
+SELECT * FROM DEPT_TEMP;
+
+-- 실습 10-5 NULL을 지정하여 입력하기
+INSERT INTO DEPT_TEMP(DEPTNO, DNAME, LOC)
+            VALUES(70   , 'WEB' , NULL);
+SELECT * FROM DEPT_TEMP;
+
+-- 실습 10-6 빈 공백 문자열로 NULL 입력하기
+INSERT INTO DEPT_TEMP(DEPTNO, DNAME, LOC)
+            VALUES(80   , 'MOBILE' , '');
+SELECT * FROM DEPT_TEMP;
+
+-- 실습 10-7 열 데이터를 넣지 않는 방식으로 NULL 데이터 입력하기
+INSERT INTO DEPT_TEMP(DEPTNO, LOC)
+            VALUES(90   , 'INCHEON');
+SELECT * FROM DEPT_TEMP;
+
+-- 실습 10-8 EMP 테이블을 복사해서 EMP_TEMP 테이블 만들기
+CREATE TABLE EMP_TEMP
+    AS SELECT * FROM EMP
+    WHERE 1 <> 1;
+SELECT * FROM EMP_TEMP;
+
+-- 실습 10-9 INSERT문으로 날짜 데이터 입력하기(날짜 사이에 / 입력)
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+            VALUES(9999, '홍길동' , 'PRESIDENT', NULL, '2001/01/01',
+            5000, 1000, 10);
+SELECT * FROM EMP_TEMP;
+
+-- 실습 10-10 INSERT문으로 날짜 데이터 입력하기(날짜 사이에 -입력)
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+            VALUES(1111, '성춘향' , 'MANAGER', 9999, '2001-01-05',
+            4000, NULL, 20);
+SELECT * FROM EMP_TEMP;
+
+-- 실습 10-11 날짜 데이터 형식을 반대로 했을 때
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+            VALUES(2111, '이순신' , 'MANAGER', 9999, '01/01/2001',
+            4000, NULL, 20);
+            
+-- 실습 10-12 TO_DATE함수를 사용하여 날짜 데이터 입력하기
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+            VALUES(2111, '이순신' , 'MANAGER', 9999,
+            TO_DATE('07/01/2001', 'DD/MM/YYYY'),
+            4000, NULL, 20);
+SELECT * FROM EMP_TEMP;            
+
+-- 실습 10-13 SYSDATE를 사용하여 날짜 데이터 입력하기
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+            VALUES(3111, '심청이' , 'MANAGER', 9999, SYSDATE,
+            4000, NULL, 30);
+SELECT * FROM EMP_TEMP;
+
+-- 실습 10-14 서브쿼리로 여러 데이터 추가하기
+INSERT INTO EMP_TEMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+    SELECT E.EMPNO, E.ENAME, E.JOB, E.MGR, E.HIREDATE, E.SAL, E.COMM, E.DEPTNO
+    FROM EMP E, SALGRADE S
+    WHERE E.SAL BETWEEN S.LOSAL AND S.HISAL
+    AND S.GRADE = 1;
+    
+ SELECT * FROM EMP_TEMP;
+ 

@@ -1,0 +1,71 @@
+-- Q1. 급여(SAL)가 2000 초과인 사원들의 부서 정보, 사원 정보를 오른쪽과 같이 출력해 보세요
+-- (단 SQL-99 이전 방식과 SQL-99방식을 각각 사용하여 작성하세요.)
+-- SQL-99 이전 방식
+SELECT D.DEPTNO, D.DNAME, E.EMPNO, E.ENAME, E.SAL
+FROM EMP E, DEPT D
+WHERE E.DEPTNO = D.DEPTNO 
+AND E.SAL >=2000;
+
+-- SQL-99 이후 방식
+SELECT DEPTNO, D.DNAME, E.EMPNO, E.ENAME, E.SAL
+FROM EMP E NATURAL JOIN DEPT D
+WHERE E.SAL >2000;
+
+-- Q2. 오른쪽과 같이 각 부서별 평균 급여, 최대 급여, 최소 급여, 사원수를 출력해 보세요.
+-- (단 SQL-99 이전 방식과 SQL-99방식을 각각 사용하여 작성하세요.)
+
+-- SQL-99 이전 방식
+SELECT D.DEPTNO, D.DNAME,
+        TRUNC(AVG(SAL)) AS AVG_SAL,
+        MAX(SAL) AS MAX_SAL,
+        COUNT(*) AS CNT
+FROM EMP E, DEPT D
+WHERE E.DEPTNO = D.DEPTNO
+GROUP BY D.DEPTNO, D.DNAME;
+
+-- SQL-99 이후 방식
+SELECT DEPTNO, D.DNAME,
+        TRUNC(AVG(SAL)) AS AVG_SAL,
+        MAX(SAL) AS MAX_SAL,
+        COUNT(*) AS CNT
+FROM EMP E JOIN DEPT D USING(DEPTNO)
+GROUP BY DEPTNO, D.DNAME;
+
+-- Q3. 모든 부서 정보와 사원 정보를 오른쪽과 같이 부서 번호, 사원 이름순으로 정렬하여 출력해 보세요.
+-- (단 SQL-99 이전 방식과 SQL-99방식을 각각 사용하여 작성하세요.)
+
+-- SQL-99 이전 방식
+SELECT D.DEPTNO, D.DNAME, E.EMPNO, E.ENAME, E.JOB, E.SAL
+FROM EMP E, DEPT D
+WHERE E.DEPTNO(+) = D.DEPTNO
+ORDER BY D.DEPTNO, E.ENAME;
+
+-- SQL-99 이후 방식
+SELECT D.DEPTNO, D.DNAME, E.EMPNO, E.ENAME, E.JOB, E.SAL
+FROM EMP E RIGHT OUTER JOIN DEPT D ON(E.DEPTNO=D.DEPTNO)
+ORDER BY D.DEPTNO, E.ENAME;
+
+-- Q4. 다음과 같이 모든 부서 정보, 사원 정보, 급여 등급 정보, 각 사원의 직속 상관의 정보를 부서 번호,
+-- 사원 번호 순서로 정렬하여 출력해 보세요(단 SQL-99 이전 방식과 SQL-99방식을 각각 사용하여 작성하세요.)
+
+-- SQL-99 이전 방식
+SELECT D.DEPTNO, D.DNAME,
+        E.EMPNO, E.ENAME, E.MGR, E.SAL, E.DEPTNO,
+        S.LOSAL, S.HISAL, S.GRADE,
+        E2.EMPNO AS MGR_EMPNO, E2.ENAME AS MGR_ENMAE
+FROM EMP E, DEPT D, SALGRADE S, EMP E2
+WHERE E.DEPTNO(+) = D.DEPTNO
+AND E.SAL BETWEEN S.LOSAL(+) AND S.HISAL(+)
+AND E.MGR = E2.EMPNO(+)
+ORDER BY D.DEPTNO, E.EMPNO;
+
+-- SQL-99 이후 방식
+SELECT D.DEPTNO, D.DNAME,
+        E.EMPNO, E.ENAME, E.MGR, E.SAL, E.DEPTNO,
+        S.LOSAL, S.HISAL, S.GRADE,
+        E2.EMPNO AS MGR_EMPNO, E2.ENAME AS MGR_ENMAE
+FROM EMP E RIGHT OUTER JOIN DEPT D ON (E.DEPTNO = D.DEPTNO)
+            LEFT OUTER JOIN SALGRADE S ON (E.SAL BETWEEN S.LOSAL AND S.HISAL)
+            LEFT OUTER JOIN EMP E2
+            ON(E.MGR = E2.EMPNO)
+ORDER BY D.DEPTNO, E.EMPNO;

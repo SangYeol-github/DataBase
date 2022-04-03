@@ -1,0 +1,34 @@
+-- Q1. 다음 열 구조를 가지는 EMP_HW 테이블을 만들어 보세요.
+CREATE TABLE EMP_HW(
+EMPNO       NUMBER(4),
+ENAME       VARCHAR2(10),
+JOB         VARCHAR2(9),
+MGR         NUMBER(4),
+HIREDATE    DATE,
+SAL         NUMBER(7,2),
+COMM        NUMBER(7,2),
+DEPTNO      NUMBER(2)
+);
+
+-- Q2. EMP_HW 테이블에 BIGO 열을 추가해 보세요. BIGO 열의 자료형은 가변형 문자열이고, 길이는 20입니다.
+ALTER TABLE EMP_HW
+ADD BIGO VARCHAR2(20);
+
+-- Q3. EMP_HW 테이블의 BIGO 열 크기를 30으로 변경해 보세요.
+ALTER TABLE EMP_HW
+MODIFY BIGO VARCHAR2(30);
+
+-- Q4. EMP_HW 테이블 BIGO 열 이름을 REMARK로 변경해 보세요.
+ALTER TABLE EMP_HW
+RENAME COLUMN BIGO TO REMARK;
+
+-- Q5. EMP_HW 테이블에 EMP 테이블의 데이터를 모두 저장해 보세요. 단 REMARK 열은 NULL로 삽입합니다.
+SELECT * FROM EMP_HW;
+INSERT INTO EMP_HW
+SELECT EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, NULL
+FROM EMP;
+
+-- Q6. 지금까지 사용한 EMP_HW 테이블을 삭제해보세요.
+DROP TABLE EMP_HW;
+
+SELECT * FROM EMP_HW;
