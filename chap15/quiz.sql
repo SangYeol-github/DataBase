@@ -1,0 +1,37 @@
+-- Q1. 다음 조건을 만족하는 SQL문을 작성해 보세요.
+-- ① SYSTEM 계정으로 접속하여 PREV_HW 계정을 생성해 보세요.
+SQLPLUS SYSTEM/1234
+CREATE USER C##PREV_HW
+IDENTIFIED BY 1234;
+
+-- ② 비밀번호는 ORCL로 지정합니다. 접속 권한을 부여하고 PREV_HW 계정으로 접속이 잘 되는지
+-- 확인해 보세요.
+ALTER USER C##PREV_HW
+IDENTIFIED BY ORCL;
+
+GRANT CREATE SESSION TO C##PREV_HW;
+
+CONN C##PREV_HW/ORCL
+
+-- Q2. SCOTT 계정으로 접속하여 위에서 생성한 PREV_HW 계정에 SCOTT 소유의 EMP, DEPT,
+-- SALGRADE 테이블에 SELECT 권한을 부여하는 SQL 문을 작성해 보세요. 권한을 부여 했으면
+-- PREV_HW 계정으로 SCOTT의 EMP, DEPT, SALGRADE 테이블이 잘 조회되는지 확인해 보세요.
+CONN SCOTT/tiger
+
+GRANT SELECT ON EMP TO C##PREV_HW;
+GRANT SELECT ON DEPT TO C##PREV_HW;
+GRANT SELECT ON SALGRADE TO C##PREV_HW;
+
+CONN C##PREV_HW/ORCL
+SELECT * FROM SCOTT.EMP;
+SELECT * FROM SCOTT.DEPT;
+SELECT * FROM SCOTT.SALGRADE;
+
+-- Q3. SCOTT 계정으로 접속하여 PREV_HW 계정에 SALGRADE 테이블의 SELECT 권한을 취소 하는
+-- SQL문을 작성해 보세요. 권한의 변경이 완료되면 다음과 같이 PREV_HW 계정으로
+-- SALGRADE 테이블의 조회 여부를 확인해 봅시다.
+CONN SCOTT/tiger
+REVOKE SELECT ON SALGRADE FROM C##PREV_HW;
+
+CONN C##PREV_HW/ORCL
+SELECT * FROM SCOTT.SALGRADE;

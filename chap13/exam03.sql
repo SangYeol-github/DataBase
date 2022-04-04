@@ -1,0 +1,60 @@
+-- 실습 13-14 뷰를 생성하기 위해 계정 변경 접속하기(SQL*PLUS)
+SQLPLUS SYSTEM/1234
+
+GRANT CREATE VIEW TO SCOTT;
+
+-- 실습 13-15 뷰 생성하기(토드)
+CREATE VIEW VW_EMP20
+AS (SELECT EMPNO, ENAME, JOB, DEPTNO
+FROM EMP
+WHERE DEPTNO = 20);
+
+-- 실습 13-16 생성한 뷰 확인하기(토드)
+SELECT * FROM USER_VIEWS;
+
+-- 실습 13-17 생성한 뷰 내용 확인하기(SCOTT 계정으로 접속했을 때)
+SELECT VIEW_NAME, TEXT_LENGTH, TEXT
+FROM USER_VIEWS;
+
+-- 실습 13-18
+SELECT * FROM VW_EMP20;
+
+-- 부서 번호가 30인 사원 정보의 모든 열을 출력하는 VM_EMP30ALL 뷰를 작성하는 다음 SQL문의 빈칸을 채워 보세요.
+CREATE VIEW VW_EMP30ALL
+AS (SELECT * FROM EMP
+WHERE DEPTNO = 30);
+
+-- 실습 13-19 뷰 삭제하기
+DROP VIEW VW_EMP20;
+
+-- 실습 13-20 ROWNUM을 추가로 조회하기
+SELECT  ROWNUM, E.*
+FROM EMP E;
+
+-- 실습 EMP 테이블을 SAL 열 기준으로 정렬하기
+SELECT ROWNUM, E.*
+FROM EMP E
+ORDER BY SAL DESC;
+
+-- 실습 13-22 인라인 뷰(서브쿼리 사용)
+SELECT ROWNUM, E.*
+FROM (SELECT *
+FROM EMP E
+ORDER BY SAL DESC) E;
+
+-- 실습 13-23 인라인 뷰(WITH절 사용)
+WITH E AS (SELECT * FROM EMP ORDER BY SAL DESC)
+SELECT ROWNUM, E.*
+FROM E;
+
+-- 실습 13-23 인라인 뷰로 TOP-N 추출하기(서브쿼리 사용)
+SELECT ROWNUM, E.*
+FROM (SELECT * FROM EMP E
+ORDER BY SAL DESC) E
+WHERE ROWNUM <= 3;
+
+-- 실습 13-25 인라인 뷰로 TOP-N 추출하기(WITH절 사용)
+WITH E AS (SELECT * FROM EMP ORDER BY SAL DESC)
+SELECT ROWNUM, E.*
+FROM E
+WHERE ROWNUM <= 3;

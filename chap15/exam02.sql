@@ -1,0 +1,47 @@
+-- 실습 15-7 SYSTEM 계정으로 접속하여 사용자(ORCLSTUDY) 생성하기(SQL*PLUS)
+CREATE USER C##ORCLSTUDY
+IDENTIFIED BY ORACLE;
+
+-- 실습 15-8 사용자 권한 부여하기(SQL*PLUS)
+GRANT RESOURCE, CREATE SESSION, CREATE TABLE TO C##ORCLSTUDY;
+
+-- 실습 15-9 ORCLSTUDY 사용자에게 TEMP 테이블 권한 부여하기
+CONN SCOTT/tiger
+
+CREATE TABLE TEMP (
+    COL1    VARCHAR2(20),
+    COL2    VARCHAR2(20)
+);
+
+GRANT SELECT ON TEMP TO C##ORCLSTUDY;
+
+GRANT INSERT ON TEMP TO C##ORCLSTUDY;
+
+-- 실습 15-10 ORCL에게 TEMP 테이블의 여러 권한을 한 번에 부여하기
+GRANT SELECT, INSERT ON TEMP
+TO C##ORCLSTUDY;
+
+-- 실습 15-11 ORCLSTUDY로 사용자 권한을 부여받은 TEMP 테이블 사용하기
+CONN C##ORCLSTUDY/ORACLE
+
+SELECT * FROM SCOTT.TEMP;
+
+INSERT INTO SCOTT.TEMP VALUES('TEXT', 'FROM C##ORCLSTUDY');
+
+SELECT * FROM SCOTT.TEMP;
+
+-- 실습 15-12 ORCLSTUDY에 부여된 TEMP 테이블 사용 권한 취소하기
+CONN SCOTT/tiger
+
+REVOKE SELECT, INSERT ON TEMP FROM C##ORCLSTUDY;
+
+-- 실습 15-13 ORCLSTUDY로 권한 철회된 TEMP 테이블 조회하기(실패)
+CONN C##ORCLSTUDY/ORACLE
+
+SELECT * FROM SCOTT.TEMP;
+
+-- 1분 복습.
+-- 오라클에서는 새로운 사용자를 생성하기 위해 1. CREATE USER 문을 사용합니다.
+-- 생성된 계정에는 여러 가지 권한을 부여할 수 있습니다. 권한을 뷰여하기 위해서
+-- 사용하는 명령어는 2. GRANT 이며, 부며된 권한을 취소하기 위해서는
+-- 3. REVOKE 명령어를 사용 합니다.
